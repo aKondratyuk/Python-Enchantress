@@ -28,6 +28,6 @@ class Tesla(Car, metaclass=MetaChargableCar):
 
 if __name__ == '__main__':
     ferrari_espando = Ferrari("300 km/h", "red")
-    tesla_p100 = Tesla("220 km/h", "gray")
-    print("Tesla charged to", tesla_p100.charge())
+    tesla_p100 = Tesla("220 km/h", "Gray")
+    print(f"{tesla_p100.color} Tesla charged to", tesla_p100.charge())
 
