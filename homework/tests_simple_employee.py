@@ -1,4 +1,6 @@
 import requests
+import unittest
+from unittest import mock
 
 
 class Employee:
@@ -28,3 +30,50 @@ class Employee:
             return response.text
         else:
             return 'Bad Response!'
+
+
+class TestEmployee(unittest.TestCase):
+    def test_email(self):
+        test_manager = Employee('andrii', 'kondratyuk', 2000)
+        self.assertEqual(test_manager.email, 'andrii.kondratyuk@email.com')
+
+        test_programmer = Employee('peter', 'pan', 800)
+        self.assertEqual(test_programmer.email, 'peter.pan@email.com')
+
+    def test_fullname(self):
+        test_manager = Employee('andrii', 'kondratyuk', 2000)
+        self.assertEqual(test_manager.fullname, 'andrii kondratyuk')
+
+        test_programmer = Employee('peter', 'pan', 800)
+        self.assertEqual(test_programmer.fullname, 'peter pan')
+
+    def test_apply_raise(self):
+        test_manager = Employee('andrii', 'kondratyuk', 2000)
+        pay = test_manager.pay
+        test_manager.apply_raise()
+        self.assertEqual(test_manager.pay, int(pay*1.05))
+
+        with self.assertRaises(TypeError):
+            test_weird_manager = Employee('andrii', 'kondratyuk', '2000')
+            test_weird_manager.apply_raise()
+
+        test_programmer = Employee('peter', 'pan', 800)
+        pay = test_programmer.pay
+        test_programmer.apply_raise()
+        self.assertEqual(test_programmer.pay, int(pay*1.05))
+
+        with self.assertRaises(TypeError):
+            test_weird_programmer = Employee('peter', 'pan', '800')
+            test_weird_programmer.apply_raise()
+
+    def mock_request(self):
+        class Requests:
+            def get(self, text):
+                pass
+            ok = True
+        return Requests()
+
+    @mock.patch('homework_3.tests_simple_employee.requests', side_effect=mock_request)
+    def test_monthly_schedule(self, response):
+        test_manager = Employee('andrii', 'kondratyuk', 2000)
+        test_manager.monthly_schedule(6)
